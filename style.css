@@ -1,86 +1,102 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root {
+  --bg: #ffffff;
+  --text: #333333;
+  --accent: #2980b9;
+  --input-bg: #f7f7f7;
+}
+
+body.dark-mode {
+  --bg: #1e1e1e;
+  --text: #eeeeee;
+  --accent: #74ebd5;
+  --input-bg: #2a2a2a;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+  font-family: 'Segoe UI', sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  color: #333;
 }
 
 .container {
-  max-width: 600px;
-  margin: 80px auto;
-  background: white;
+  max-width: 700px;
+  margin: 50px auto;
+  background: var(--input-bg);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  text-align: center;
 }
 
 .title {
-  font-size: 2.2rem;
+  text-align: center;
+  font-size: 2rem;
   margin-bottom: 20px;
-  color: #2c3e50;
 }
 
 .search-box {
   display: flex;
   justify-content: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
 .search-box input {
-  padding: 12px 15px;
-  width: 70%;
+  flex: 1;
+  padding: 10px;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
   font-size: 16px;
-  border: 2px solid #74ebd5;
-  border-radius: 8px 0 0 8px;
-  outline: none;
-  transition: border 0.3s;
-}
-
-.search-box input:focus {
-  border-color: #2980b9;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .search-box button {
-  padding: 12px 20px;
-  font-size: 16px;
-  background: #2980b9;
-  color: white;
+  padding: 10px 16px;
   border: none;
-  border-radius: 0 8px 8px 0;
+  background: var(--accent);
+  color: white;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
-}
-
-.search-box button:hover {
-  background: #1c5d99;
+  font-size: 16px;
 }
 
 .result-box {
-  font-size: 18px;
-  padding: 15px;
-  min-height: 40px;
-  color: #2c3e50;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-top: 10px;
 }
 
-.result-box strong {
-  font-size: 20px;
+.result-box audio {
+  margin-top: 10px;
+}
+
+.result-box ul {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.history-box {
+  margin-top: 30px;
+}
+
+.history-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.history-box li {
+  padding: 6px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
 }
 
 footer {
   text-align: center;
   padding: 15px;
-  color: #fff;
-  font-size: 14px;
-  background: rgba(0, 0, 0, 0.1);
+  margin-top: auto;
+  background: rgba(0,0,0,0.05);
 }
-
