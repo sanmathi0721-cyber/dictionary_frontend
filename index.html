@@ -12,9 +12,13 @@
     <div class="search-box">
       <input type="text" id="wordInput" placeholder="Search for a word..." />
       <button onclick="searchWord()">🔍</button>
+      <button id="toggleMode">🌙</button>
     </div>
-    <div id="result" class="result-box">
-      <!-- Definition will appear here -->
+    <div id="result" class="result-box"></div>
+
+    <div class="history-box">
+      <h3>🕘 Recent Searches</h3>
+      <ul id="historyList"></ul>
     </div>
   </div>
 
@@ -25,3 +29,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
