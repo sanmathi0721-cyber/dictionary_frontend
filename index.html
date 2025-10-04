@@ -8,11 +8,20 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dictionary App</h1>
-    <input type="text" id="wordInput" placeholder="Enter a word" />
-    <button onclick="searchWord()">Search</button>
-    <div id="result"></div>
+    <h1 class="title">📘 Online Dictionary</h1>
+    <div class="search-box">
+      <input type="text" id="wordInput" placeholder="Search for a word..." />
+      <button onclick="searchWord()">🔍</button>
+    </div>
+    <div id="result" class="result-box">
+      <!-- Definition will appear here -->
+    </div>
   </div>
+
+  <footer>
+    <p>Made with ❤️ by [Your Name]</p>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>
