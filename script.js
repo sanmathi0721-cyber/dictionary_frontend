@@ -10,7 +10,7 @@ async function searchWord() {
   resultDiv.innerHTML = "Searching...";
 
   try {
-    const response = await fetch(`https://your-backend-url.onrender.com/define/${word}`);
+    const response = await fetch(`https://dictionary-backend-2.onrender.com/define/${word}`);
     const data = await response.json();
 
     if (data.error) {
