@@ -1,4 +1,4 @@
-const backendURL = "https://your-backend-url.onrender.com"; // Replace with your real URL
+const backendURL = " https://dictionary-backend-3.onrender.com"; // Replace with your real URL
 
 const resultBox = document.getElementById("result");
 const historyList = document.getElementById("historyList");
