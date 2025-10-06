@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>AI Fantasy Dictionary v2.0</title>
+<style>
+:root {
+  --a1:#7f00ff;--a2:#00b3ff;
+}
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#0f172a,#1e293b,#312e81);
+  background-size:400% 400%;
+  animation:aurora 12s ease infinite;
+  color:#e2e8f0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100vh;overflow:hidden;
+}
+@keyframes aurora{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+h1{
+  font-size:2.2em;text-align:center;
+  background:linear-gradient(90deg,var(--a1),var(--a2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 25px rgba(127,0,255,.5);
+}
+.card{
+  background:rgba(255,255,255,.08);backdrop-filter:blur(15px);
+  border-radius:18px;padding:30px;width:85%;max-width:600px;text-align:center;
+  box-shadow:0 0 25px rgba(127,0,255,.3);
+}
+input{
+  width:70%;padding:12px;border-radius:12px;border:none;outline:none;font-size:16px;margin-right:10px;text-align:center;
+}
+button{
+  background:linear-gradient(90deg,var(--a1),var(--a2));color:white;border:none;border-radius:12px;
+  padding:12px 20px;cursor:pointer;font-size:15px;font-weight:bold;transition:.3s;
+}
+button:hover{transform:scale(1.08);box-shadow:0 0 15px rgba(0,179,255,.6);}
+.result{margin-top:20px;text-align:left;color:#f8fafc;}
+.loading{border:4px solid rgba(255,255,255,.2);border-left-color:var(--a2);
+  border-radius:50%;width:28px;height:28px;animation:spin 1s linear infinite;margin:20px auto;display:none;}
+@keyframes spin{100%{transform:rotate(360deg)}}
+.orb{
+  position:fixed;bottom:30px;right:30px;width:60px;height:60px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,var(--a1),var(--a2));
+  box-shadow:0 0 30px var(--a1);display:flex;align-items:center;justify-content:center;
+  color:white;font-weight:bold;animation:float 3s ease-in-out infinite;cursor:pointer;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+footer{position:absolute;bottom:10px;font-size:13px;color:#94a3b8;}
+/* Recent panel */
+#recentPanel{
+  position:fixed;top:0;right:-320px;width:300px;height:100%;
+  background:rgba(30,41,59,.95);backdrop-filter:blur(10px);
+  box-shadow:-5px 0 20px rgba(0,0,0,.4);padding:20px;
+  transition:right .4s ease;color:#f1f5f9;overflow-y:auto;z-index:999;
+}
+#recentPanel.open{right:0;}
+.recent-item{border-bottom:1px solid rgba(255,255,255,.1);padding:8px 0;}
+.recent-item strong{color:#93c5fd}
+</style>
+</head>
+<body>
+<h1>✨ AI Fantasy Dictionary ✨</h1>
+
+<div class="card">
+  <input type="text" id="wordInput" placeholder="Enter a word..." />
+  <button id="searchBtn">🔍 Search</button>
+  <button id="voiceBtn">🎤</button>
+  <div class="loading" id="loader"></div>
+  <div class="result" id="result"><em>Search for any word to see its meaning.</em></div>
+</div>
+
+<div id="recentPanel">
+  <h2>📜 Recent Searches</h2>
+  <div id="recentList"></div>
+</div>
+
+<div class="orb" id="orb">AI</div>
+<footer>© 2025 AI Fantasy Dictionary</footer>
+
+<script>
+const BACKEND_URL="https://dictionary-backend-2.onrender.com
+";
+const input=document.getElementById("wordInput");
+const result=document.getElementById("result");
+const loader=document.getElementById("loader");
+const orb=document.getElementById("orb");
+const panel=document.getElementById("recentPanel");
+
+document.getElementById("searchBtn").addEventListener("click",searchWord);
+document.getElementById("voiceBtn").addEventListener("click",speakWord);
+orb.addEventListener("click",()=>panel.classList.toggle("open"));
+
+async function searchWord(){
+  const word=input.value.trim();
+  if(!word)return alert("Please enter a word!");
+  loader.style.display="block";result.innerHTML="";
+  try{
+    const res=await fetch(`${BACKEND_URL}/define?word=${encodeURIComponent(word)}`);
+    if(!res.ok)throw new Error("Failed to fetch meaning.");
+    const data=await res.json();
+    loader.style.display="none";orbTalk("Found it!");
+    result.innerHTML=`
+      <h3>${word}</h3>
+      <p><strong>Meaning:</strong> ${data.meaning||"No meaning found."}</p>
+      <p><strong>Example:</strong> ${data.example||"No example available."}</p>`;
+    saveHistory(word,data.meaning);
+    renderHistory();
+  }catch(err){
+    loader.style.display="none";orbTalk("Oops!");
+    result.innerHTML=`<p style="color:#f87171">⚠️ ${err.message}</p>`;
+  }
+}
+
+function speakWord(){
+  const word=input.value.trim();
+  if(!word)return;
+  const u=new SpeechSynthesisUtterance(word);
+  speechSynthesis.speak(u);
+  orbTalk("Speaking...");
+}
+function orbTalk(msg){orb.textContent="💬";setTimeout(()=>orb.textContent="AI",1200);console.log("[ORB]",msg);}
+function saveHistory(word,meaning){
+  let hist=JSON.parse(localStorage.getItem("aiDictHistory"))||[];
+  hist.unshift({word,meaning,time:new Date().toLocaleString()});
+  if(hist.length>10)hist.pop();
+  localStorage.setItem("aiDictHistory",JSON.stringify(hist));
+}
+function renderHistory(){
+  const hist=JSON.parse(localStorage.getItem("aiDictHistory"))||[];
+  const div=document.getElementById("recentList");
+  div.innerHTML=hist.length?hist.map(h=>`
+    <div class="recent-item"><strong>${h.word}</strong><br>
+    <small>${h.meaning||""}</small><br><em>${h.time}</em></div>`).join(""):
+    "<em>No recent searches.</em>";
+}
+renderHistory();
+</script>
+</body>
+</html>
